@@ -1,0 +1,224 @@
+<div class="attendance-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>📋 Gestion des Présences</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToStudents()" class="btn-secondary">
+        👨‍🎓 Élèves
+      </button>
+      <button (click)="goToGroups()" class="btn-secondary">
+        👥 Groupes
+      </button>
+      <button (click)="goToPayments()" class="btn-secondary">
+        💰 Paiements
+      </button>
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Dashboard
+      </button>
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card present">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <p class="stat-label">Présents</p>
+          <p class="stat-value">{{ stats.present }}</p>
+        </div>
+      </div>
+      <div class="stat-card absent">
+        <div class="stat-icon">❌</div>
+        <div class="stat-info">
+          <p class="stat-label">Absents</p>
+          <p class="stat-value">{{ stats.absent }}</p>
+        </div>
+      </div>
+      <div class="stat-card late">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-info">
+          <p class="stat-label">Retards</p>
+          <p class="stat-value">{{ stats.retard }}</p>
+        </div>
+      </div>
+      <div class="stat-card rate">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <p class="stat-label">Taux de présence</p>
+          <p class="stat-value">{{ stats.tauxPresence }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="session-selector">
+      <h2>Marquer les présences pour une séance</h2>
+      
+      <div class="selector-row">
+        <div class="form-group">
+          <label>Groupe/Classe</label>
+          <select [(ngModel)]="selectedGroup" (change)="onGroupChange()">
+            <option [ngValue]="null">-- Sélectionner un groupe --</option>
+            <option *ngFor="let group of groups" [ngValue]="group">
+              {{ group.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Date de la séance</label>
+          <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange()">
+        </div>
+      </div>
+
+      <div *ngIf="selectedGroup" class="group-info">
+        <p><strong>📍 Lieu:</strong> {{ selectedGroup.lieu || 'Non défini' }}</p>
+        <p><strong>📅 Jour:</strong> {{ selectedGroup.jourSeance || 'Non défini' }}</p>
+        <p><strong>⏰ Horaires:</strong> 
+          {{ selectedGroup.heureDebut || '--:--' }} - {{ selectedGroup.heureFin || '--:--' }}
+        </p>
+        <p><strong>👥 Élèves inscrits:</strong> {{ selectedGroup.students?.length || 0 }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      Chargement...
+    </div>
+
+    <div *ngIf="!isLoading && selectedGroup && selectedGroup.students && selectedGroup.students.length > 0" class="attendance-table-container">
+      <h3>Liste des élèves</h3>
+      
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th>Élève</th>
+            <th>Statut</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of selectedGroup.students">
+            <td class="student-name">
+              <strong>{{ student.prenom }} {{ student.nom }}</strong>
+              <small *ngIf="student.niveau">{{ student.niveau }}</small>
+            </td>
+            <td class="status-cell">
+              <div class="status-buttons">
+                <button 
+                  type="button"
+                  class="status-btn present"
+                  [class.active]="getAttendanceStatus(student.id!) === 'présent'"
+                  (click)="setAttendanceStatus(student.id!, 'présent')">
+                  ✅ Présent
+                </button>
+                <button 
+                  type="button"
+                  class="status-btn absent"
+                  [class.active]="getAttendanceStatus(student.id!) === 'absent'"
+                  (click)="setAttendanceStatus(student.id!, 'absent')">
+                  ❌ Absent
+                </button>
+                <button 
+                  type="button"
+                  class="status-btn late"
+                  [class.active]="getAttendanceStatus(student.id!) === 'retard'"
+                  (click)="setAttendanceStatus(student.id!, 'retard')">
+                  ⏰ Retard
+                </button>
+                <!-- Historique des présences avec filtres -->
+    <div class="history-section">
+      <button (click)="toggleHistory()" class="btn-history">
+        {{ showHistory ? '📋 Masquer l\'historique' : '📋 Voir l\'historique des présences' }}
+      </button>
+
+      <div *ngIf="showHistory" class="history-container">
+        <h3>Historique des présences</h3>
+
+        <!-- Filtres -->
+        <div class="filters-container">
+          <div class="filters-row">
+            <div class="form-group">
+              <label>Date début</label>
+              <input 
+                type="date" 
+                [(ngModel)]="filterDateDebut" 
+                (change)="applyHistoryFilters()"
+                class="filter-input">
+            </div>
+
+            <div class="form-group">
+              <label>Date fin</label>
+              <input 
+                type="date" 
+                [(ngModel)]="filterDateFin" 
+                (change)="applyHistoryFilters()"
+                class="filter-input">
+            </div>
+
+            <div class="form-group">
+              <label>Groupe</label>
+              <select [(ngModel)]="filterGroupe" (change)="applyHistoryFilters()" class="filter-select">
+                <option value="">Tous les groupes</option>
+                <option *ngFor="let group of groups" [value]="group.id">{{ group.nom }}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Statut</label>
+              <select [(ngModel)]="filterStatutPresence" (change)="applyHistoryFilters()" class="filter-select">
+                <option value="">Tous</option>
+                <option value="présent">Présent</option>
+                <option value="absent">Absent</option>
+                <option value="retard">Retard</option>
+              </select>
+            </div>
+
+            <button (click)="resetHistoryFilters()" class="btn-reset">
+              🔄 Réinitialiser
+            </button>
+          </div>
+
+          <div class="results-info">
+            <p>{{ filteredAttendance.length }} enregistrement(s) trouvé(s)</p>
+          </div>
+        </div>
+
+        <!-- Tableau historique -->
+        <div *ngIf="filteredAttendance.length > 0" class="history-table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Élève</th>
+                <th>Groupe</th>
+                <th>Statut</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let att of filteredAttendance">
+                <td>{{ att.dateSeance | date:'dd/MM/yyyy' }}</td>
+                <td><strong>{{ att.student?.prenom }} {{ att.student?.nom }}</strong></td>
+                <td>{{ att.group?.nom }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(att.statut)">
+                    {{ att.statut }}
+                  </span>
+                </td>
+                <td>{{ att.notes || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="filteredAttendance.length === 0" class="empty-state">
+          <p>Aucun enregistrement trouvé</p>
+        </div>
+      </div>
+    </div>
+              </div>
+            </td>

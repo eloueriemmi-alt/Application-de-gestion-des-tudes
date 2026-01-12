@@ -1,0 +1,109 @@
+<div class="statistics-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>📊 Statistiques</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Dashboard
+      </button>
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div *ngIf="isLoading" class="loading">
+      Chargement des statistiques...
+    </div>
+
+    <div *ngIf="!isLoading">
+      <!-- Cartes statistiques -->
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-icon">👨‍🎓</div>
+          <div class="stat-info">
+            <p class="stat-label">Total Élèves</p>
+            <p class="stat-value">{{ totalStudents }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <p class="stat-label">Revenus Totaux</p>
+            <p class="stat-value">{{ totalRevenue.toFixed(2) }} DT</p>
+          </div>
+        </div>
+
+        <div class="stat-card purple">
+          <div class="stat-icon">📋</div>
+          <div class="stat-info">
+            <p class="stat-label">Taux de Présence</p>
+            <p class="stat-value">{{ averageAttendanceRate }}%</p>
+          </div>
+        </div>
+
+        <div class="stat-card orange">
+          <div class="stat-icon">💳</div>
+          <div class="stat-info">
+            <p class="stat-label">Total Paiements</p>
+            <p class="stat-value">{{ totalPayments }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphiques -->
+      <div class="charts-grid">
+        <!-- Revenus par mois -->
+        <div class="chart-card">
+          <h3>📈 Revenus par Mois</h3>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="revenueChartData"
+              [options]="revenueChartOptions"
+              type="line">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Répartition des paiements -->
+        <div class="chart-card">
+          <h3>💳 Méthodes de Paiement</h3>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="paymentMethodChartData"
+              [options]="paymentMethodChartOptions"
+              type="pie">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Taux de présence -->
+        <div class="chart-card">
+          <h3>📋 Présences / Absences</h3>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="attendanceChartData"
+              [options]="attendanceChartOptions"
+              type="doughnut">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Élèves actifs/inactifs -->
+        <div class="chart-card">
+          <h3>👥 Statut des Élèves</h3>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="studentsChartData"
+              [options]="studentsChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

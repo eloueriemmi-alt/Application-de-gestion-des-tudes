@@ -1,0 +1,239 @@
+<div class="groups-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>👥 Gestion des Groupes</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToStudents()" class="btn-secondary">
+        👨‍🎓 Élèves
+      </button>
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Dashboard
+      </button>
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="header-actions">
+      <h1>Liste des Paiements</h1>
+      <div class="action-buttons">
+        <button (click)="exportToPDF()" class="btn-export btn-pdf">
+          📄 Export PDF
+        </button>
+        <button (click)="exportToExcel()" class="btn-export btn-excel">
+          📊 Export Excel
+        </button>
+        <button (click)="openAddForm()" class="btn-primary">
+          + Enregistrer un paiement
+        </button>
+      </div>
+    </div>
+    <!-- Barre de recherche et filtres -->
+    <div class="filters-container">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="applyFilters()"
+          placeholder="🔍 Rechercher par nom, description ou lieu..."
+          class="search-input">
+      </div>
+      
+      <div class="filters-row">
+        <select [(ngModel)]="filterNiveau" (change)="applyFilters()" class="filter-select">
+          <option value="">Tous les niveaux</option>
+          <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
+        </select>
+
+        <select [(ngModel)]="filterJour" (change)="applyFilters()" class="filter-select">
+          <option value="">Tous les jours</option>
+          <option *ngFor="let jour of jours" [value]="jour">{{ jour }}</option>
+        </select>
+
+        <select [(ngModel)]="filterStatut" (change)="applyFilters()" class="filter-select">
+          <option value="">Tous les statuts</option>
+          <option value="actif">Actif</option>
+          <option value="inactif">Inactif</option>
+        </select>
+
+        <button (click)="resetFilters()" class="btn-reset">
+          🔄 Réinitialiser
+        </button>
+      </div>
+
+      <div class="results-info">
+        <p>{{ filteredGroups.length }} groupe(s) trouvé(s) sur {{ groups.length }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      Chargement...
+    </div>
+
+   <div *ngIf="!isLoading && filteredGroups.length > 0" class="groups-grid">
+      <div *ngFor="let group of filteredGroups" class="group-card">
+      <p>Aucun groupe créé</p>
+      <button (click)="openAddForm()" class="btn-primary">
+        Créer le premier groupe
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && groups.length > 0" class="groups-grid">
+      <div *ngFor="let group of groups" class="group-card">
+        <div class="group-header">
+          <h3>{{ group.nom }}</h3>
+          <span class="badge" [class.active]="group.statut === 'actif'">
+            {{ group.statut }}
+          </span>
+        </div>
+
+        <div class="group-info">
+          <p *ngIf="group.description"><strong>📝 Description:</strong> {{ group.description }}</p>
+          <p *ngIf="group.niveau"><strong>📚 Niveau:</strong> {{ group.niveau }}</p>
+          <p *ngIf="group.anneeAcademique"><strong>📅 Année:</strong> {{ group.anneeAcademique }}</p>
+          
+          <div *ngIf="group.lieu || group.jourSeance" class="seance-info">
+            <p style="color: #667eea; font-weight: bold; margin: 10px 0 5px 0;">📍 Séances</p>
+            <p *ngIf="group.lieu"><strong>Lieu:</strong> {{ group.lieu }}</p>
+            <p *ngIf="group.jourSeance">
+              <strong>{{ group.jourSeance }}</strong>
+              <span *ngIf="group.heureDebut && group.heureFin">
+                de {{ group.heureDebut }} à {{ group.heureFin }}
+              </span>
+            </p>
+          </div>
+
+          <div class="students-list">
+            <p style="color: #667eea; font-weight: bold; margin: 10px 0 5px 0;">
+              👨‍🎓 Élèves ({{ group.students?.length || 0 }})
+            </p>
+            <div *ngIf="group.students && group.students.length > 0" class="students-tags">
+              <span *ngFor="let student of group.students" class="student-tag">
+                {{ student.prenom }} {{ student.nom }}
+              </span>
+            </div>
+            <p *ngIf="!group.students || group.students.length === 0" class="no-students">
+              Aucun élève assigné
+            </p>
+          </div>
+        </div>
+
+        <div class="group-actions">
+          <button (click)="openEditForm(group)" class="btn-edit">
+            ✏️ Modifier
+          </button>
+          <button (click)="deleteGroup(group.id!)" class="btn-delete">
+            🗑️ Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Formulaire -->
+  <div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{ editMode ? 'Modifier' : 'Ajouter' }} un groupe</h2>
+      
+      <form (ngSubmit)="saveGroup()" class="group-form">
+        <div class="form-group">
+          <label>Nom du groupe *</label>
+          <input type="text" [(ngModel)]="currentGroup.nom" name="nom" placeholder="Ex: 3ème année A" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="currentGroup.description" name="description" rows="3" placeholder="Description du groupe..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Niveau</label>
+            <input type="text" [(ngModel)]="currentGroup.niveau" name="niveau" placeholder="Ex: 3ème année">
+          </div>
+          <div class="form-group">
+            <label>Année académique</label>
+            <input type="text" [(ngModel)]="currentGroup.anneeAcademique" name="anneeAcademique" placeholder="Ex: 2025-2026">
+          </div>
+        </div>
+
+        <h3 style="margin: 20px 0 10px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+          📍 Informations des séances
+        </h3>
+
+        <div class="form-group">
+          <label>Lieu</label>
+          <input type="text" [(ngModel)]="currentGroup.lieu" name="lieu" placeholder="Ex: Salle 101">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Jour de la séance</label>
+            <select [(ngModel)]="currentGroup.jourSeance" name="jourSeance">
+              <option value="">-- Sélectionner --</option>
+              <option value="Lundi">Lundi</option>
+              <option value="Mardi">Mardi</option>
+              <option value="Mercredi">Mercredi</option>
+              <option value="Jeudi">Jeudi</option>
+              <option value="Vendredi">Vendredi</option>
+              <option value="Samedi">Samedi</option>
+              <option value="Dimanche">Dimanche</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Statut</label>
+            <select [(ngModel)]="currentGroup.statut" name="statut">
+              <option value="actif">Actif</option>
+              <option value="inactif">Inactif</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Heure de début</label>
+            <input type="time" [(ngModel)]="currentGroup.heureDebut" name="heureDebut">
+          </div>
+          <div class="form-group">
+            <label>Heure de fin</label>
+            <input type="time" [(ngModel)]="currentGroup.heureFin" name="heureFin">
+          </div>
+        </div>
+
+        <h3 style="margin: 20px 0 10px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+          👨‍🎓 Assigner des élèves
+        </h3>
+
+        <div class="students-selection">
+          <div *ngFor="let student of students" class="student-checkbox">
+            <input 
+              type="checkbox" 
+              [id]="'student-' + student.id" 
+              [checked]="isStudentSelected(student.id!)"
+              (change)="toggleStudent(student.id!)"
+            >
+            <label [for]="'student-' + student.id">
+              {{ student.prenom }} {{ student.nom }}
+              <span class="student-meta">{{ student.niveau || 'Niveau non défini' }}</span>
+            </label>
+          </div>
+          <p *ngIf="students.length === 0" class="no-students">
+            Aucun élève disponible. Créez d'abord des élèves.
+          </p>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="closeForm()" class="btn-secondary">
+            Annuler
+          </button>
+          <button type="submit" class="btn-primary">
+            {{ editMode ? 'Modifier' : 'Créer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

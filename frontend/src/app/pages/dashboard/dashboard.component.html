@@ -1,0 +1,67 @@
+<div class="dashboard-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>🎓 Gestion Scolaire</h2>
+    </div>
+    <div class="navbar-user">
+      <app-notification-bell></app-notification-bell>
+       <button (click)="goToDocumentation()" class="btn-doc" title="Documentation">
+    📚
+  </button>
+      <span class="user-name" *ngIf="user" (click)="goToProfile()" style="cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#333'">
+        👤 {{ user.prenom }} {{ user.nom }}
+      </span>
+          
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="dashboard-content">
+    <div class="welcome-section">
+      <h1>Bienvenue {{ user?.prenom }} ! 👋</h1>
+      <p>Tableau de bord de gestion des élèves</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card" (click)="goToStudents()" style="cursor: pointer;">
+        <div class="card-icon">👨‍🎓</div>
+        <h3>Élèves</h3>
+        <p class="card-number">{{ studentsCount }}</p>
+        <p class="card-description">Gérer les élèves</p>
+      </div>
+
+      <div class="card" (click)="goToGroups()" style="cursor: pointer;">
+        <div class="card-icon">👥</div>
+        <h3>Groupes</h3>
+        <p class="card-number">{{ groupsCount }}</p>
+        <p class="card-description">Gérer les classes</p>
+      </div>
+
+    <div class="card" (click)="goToPayments()" style="cursor: pointer;">
+  <div class="card-icon">💰</div>
+  <h3>Paiements</h3>
+  <p class="card-number">{{ totalPayments.toFixed(2) }} DT</p>
+  <p class="card-description">Suivre les paiements</p>
+</div>
+
+     <div class="card" (click)="goToStatistics()" style="cursor: pointer;">
+        <div class="card-icon">📊</div>
+        <h3>Statistiques</h3>
+        <p class="card-number">📈</p>
+        <p class="card-description">Voir les rapports</p>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>🚀 Prochaines étapes</h3>
+      <ul>
+        <li>Ajouter des modules pour gérer les paiements</li>
+        <li>Implémenter le système de présence</li>
+        <li>Ajouter des statistiques</li>
+        <li>Créer des rapports exportables</li>
+      </ul>
+    </div>
+  </div>
+</div>

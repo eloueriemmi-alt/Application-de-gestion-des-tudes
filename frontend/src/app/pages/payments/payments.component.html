@@ -1,0 +1,276 @@
+<div class="payments-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>💰 Gestion des Paiements</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToStudents()" class="btn-secondary">
+        👨‍🎓 Élèves
+      </button>
+      <button (click)="goToGroups()" class="btn-secondary">
+        👥 Groupes
+      </button>
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Dashboard
+      </button>
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-icon">💵</div>
+        <div class="stat-info">
+          <p class="stat-label">Total des paiements</p>
+         <p class="stat-value">{{ Number(totalPayments).toFixed(2) }} DT</p>
+        </div>
+      </div>
+      <div class="stat-card month">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <p class="stat-label">Ce mois-ci</p>
+        <p class="stat-value">{{ Number(totalPayments).toFixed(2) }} DT</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <h1>Liste des Paiements</h1>
+      <div class="action-buttons">
+        <button (click)="exportToPDF()" class="btn-export btn-pdf">
+          📄 Export PDF
+        </button>
+        <button (click)="exportToExcel()" class="btn-export btn-excel">
+          📊 Export Excel
+        </button>
+        <button (click)="openAddForm()" class="btn-primary">
+          + Enregistrer un paiement
+        </button>
+      </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <div class="filters-container">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="applyFilters()"
+          placeholder="🔍 Rechercher par nom d'élève ou notes..."
+          class="search-input">
+      </div>
+      
+      <div class="filters-row">
+        <select [(ngModel)]="filterMois" (change)="applyFilters()" class="filter-select">
+          <option value="">Tous les mois</option>
+          <option *ngFor="let mois of moisList" [value]="mois">{{ mois }}</option>
+        </select>
+
+        <select [(ngModel)]="filterStatut" (change)="applyFilters()" class="filter-select">
+          <option value="">Tous les statuts</option>
+          <option value="payé">Payé</option>
+          <option value="en attente">En attente</option>
+          <option value="annulé">Annulé</option>
+        </select>
+
+        <select [(ngModel)]="filterMethode" (change)="applyFilters()" class="filter-select">
+          <option value="">Toutes les méthodes</option>
+          <option value="Espèces">Espèces</option>
+          <option value="Virement">Virement bancaire</option>
+          <option value="Chèque">Chèque</option>
+          <option value="Carte">Carte bancaire</option>
+        </select>
+
+        <button (click)="resetFilters()" class="btn-reset">
+          🔄 Réinitialiser
+        </button>
+      </div>
+
+      <div class="results-info">
+        <p>{{ filteredPayments.length }} paiement(s) trouvé(s) sur {{ payments.length }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      Chargement...
+    </div>
+
+    <div *ngIf="!isLoading && payments.length === 0" class="empty-state">
+      <p>Aucun paiement enregistré</p>
+      <button (click)="openAddForm()" class="btn-primary">
+        Enregistrer le premier paiement
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && filteredPayments.length > 0" class="payments-table-container">
+      <table class="payments-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Élève</th>
+            <th>Mois</th>
+            <th>Montant</th>
+            <th>Méthode</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+         <tr *ngFor="let payment of filteredPayments">
+            <td>{{ payment.datePayement | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <strong>{{ payment.student?.prenom }} {{ payment.student?.nom }}</strong>
+            </td>
+            <td>{{ payment.mois }}</td>
+            <td class="amount">{{ Number(payment.montant).toFixed(2) }} DT</td>
+            <td>{{ payment.methodePaiement }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(payment.statut || 'payé')">
+                {{ payment.statut }}
+              </span>
+            </td>
+            <td class="actions">
+              <button (click)="openEditForm(payment)" class="btn-icon btn-edit" title="Modifier">
+                ✏️
+              </button>
+              <button (click)="deletePayment(payment.id!)" class="btn-icon btn-delete" title="Supprimer">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Formulaire -->
+  <div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{ editMode ? 'Modifier' : 'Enregistrer' }} un paiement</h2>
+      
+      <form (ngSubmit)="savePayment()" class="payment-form">
+        <div class="form-group">
+          <label>Élève *</label>
+          <select [(ngModel)]="currentPayment.student_id" name="student_id" required>
+            <option value="0">-- Sélectionner un élève --</option>
+            <option *ngFor="let student of students" [value]="student.id">
+              {{ student.prenom }} {{ student.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Montant total (DT) *</label>
+            <input 
+              type="number" 
+              [(ngModel)]="currentPayment.montant" 
+              name="montant" 
+              step="0.01" 
+              min="0" 
+              required
+              [readonly]="currentPayment.prixParSeance && currentPayment.nombreSeances">
+            <small *ngIf="currentPayment.prixParSeance && currentPayment.nombreSeances" style="color: #999; font-size: 12px;">
+              Calculé automatiquement: {{ currentPayment.prixParSeance }} DT × {{ currentPayment.nombreSeances }} séances
+            </small>
+          </div>
+          <div class="form-group">
+            <label>Mois concerné</label>
+            <input type="text" [(ngModel)]="currentPayment.mois" name="mois" placeholder="Ex: Janvier 2026">
+          </div>
+        </div>
+        <h3 style="margin: 20px 0 10px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+          📅 Gestion des séances
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prix par séance (DT)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="currentPayment.prixParSeance" 
+              name="prixParSeance" 
+              step="0.01" 
+              min="0"
+              (input)="calculateTotalFromSessions()">
+          </div>
+          <div class="form-group">
+            <label>Nombre de séances</label>
+            <input 
+              type="number" 
+              [(ngModel)]="currentPayment.nombreSeances" 
+              name="nombreSeances" 
+              min="1"
+              readonly
+              style="background: #f5f5f5;">
+            <small style="color: #999; font-size: 12px;">
+              Calculé automatiquement selon les dates ajoutées
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Dates des séances</label>
+          <div class="sessions-list">
+            <div *ngFor="let date of currentPayment.datesSeances; let i = index" class="session-item">
+              <input 
+                type="date" 
+                [value]="date"
+                (change)="updateSessionDate(i, $any($event.target).value)"
+                class="session-date-input">
+              <button type="button" (click)="removeSessionDate(i)" class="btn-remove-session">
+                ❌
+              </button>
+            </div>
+            <button type="button" (click)="addSessionDate()" class="btn-add-session">
+              + Ajouter une date de séance
+            </button>
+          </div>
+        </div>
+
+         <div class="form-row">
+          <div class="form-group">
+            <label>Date de paiement *</label>
+            <input type="date" [(ngModel)]="currentPayment.datePayement" name="datePayement" required>
+          </div>
+          <div class="form-group">
+            <label>Méthode de paiement</label>
+            <select [(ngModel)]="currentPayment.methodePaiement" name="methodePaiement">
+              <option value="Espèces">Espèces</option>
+              <option value="Virement">Virement bancaire</option>
+              <option value="Chèque">Chèque</option>
+              <option value="Carte">Carte bancaire</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Statut</label>
+          <select [(ngModel)]="currentPayment.statut" name="statut">
+            <option value="payé">Payé</option>
+            <option value="en attente">En attente</option>
+            <option value="annulé">Annulé</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea [(ngModel)]="currentPayment.notes" name="notes" rows="3" placeholder="Notes additionnelles..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="closeForm()" class="btn-secondary">
+            Annuler
+          </button>
+          <button type="submit" class="btn-primary">
+            {{ editMode ? 'Modifier' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

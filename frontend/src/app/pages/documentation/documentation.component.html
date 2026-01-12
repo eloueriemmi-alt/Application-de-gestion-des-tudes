@@ -1,0 +1,402 @@
+<div class="documentation-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>📚 Documentation</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Retour au Dashboard
+      </button>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <!-- Menu latéral -->
+    <aside class="sidebar">
+      <h3>Table des matières</h3>
+      <ul class="menu">
+        <li *ngFor="let section of sections" 
+            [class.active]="activeSection === section.id"
+            (click)="scrollToSection(section.id)">
+          <span class="menu-icon">{{ section.icon }}</span>
+          {{ section.title }}
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Contenu -->
+    <main class="content">
+      <!-- Introduction -->
+      <section id="introduction" class="doc-section">
+        <h1>📖 Introduction</h1>
+        <p>Bienvenue dans le guide d'utilisation de l'application de <strong>Gestion Scolaire</strong>.</p>
+        <p>Cette application vous permet de gérer efficacement :</p>
+        <ul>
+          <li>Les élèves et leurs informations</li>
+          <li>Les groupes et classes</li>
+          <li>Les paiements par séances</li>
+          <li>Les présences et absences</li>
+          <li>Les statistiques et rapports</li>
+        </ul>
+        <div class="info-box">
+          <strong>💡 Conseil :</strong> Prenez le temps de lire ce guide pour découvrir toutes les fonctionnalités disponibles.
+        </div>
+      </section>
+
+      <!-- Démarrage -->
+      <section id="getting-started" class="doc-section">
+        <h1>🚀 Démarrage rapide</h1>
+        <h2>Première connexion</h2>
+        <ol>
+          <li>Accédez à l'application via votre navigateur</li>
+          <li>Connectez-vous avec vos identifiants</li>
+          <li>Vous arrivez sur le <strong>Dashboard</strong></li>
+        </ol>
+        
+        <h2>Navigation principale</h2>
+        <p>Le dashboard affiche 4 cartes cliquables :</p>
+        <ul>
+          <li><strong>Élèves</strong> : Gérer les élèves</li>
+          <li><strong>Groupes</strong> : Gérer les classes</li>
+          <li><strong>Paiements</strong> : Suivre les paiements</li>
+          <li><strong>Statistiques</strong> : Voir les graphiques</li>
+        </ul>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="dashboard" class="doc-section">
+        <h1>🏠 Dashboard</h1>
+        <p>Le tableau de bord central de l'application.</p>
+        
+        <h2>Éléments affichés</h2>
+        <ul>
+          <li><strong>Nombre total d'élèves</strong></li>
+          <li><strong>Nombre de groupes</strong></li>
+          <li><strong>Total des paiements</strong></li>
+          <li><strong>Accès rapide aux modules</strong></li>
+        </ul>
+
+        <h2>Navigation rapide</h2>
+        <p>Cliquez sur n'importe quelle carte pour accéder directement au module correspondant.</p>
+        
+        <div class="warning-box">
+          <strong>⚠️ Important :</strong> Les statistiques du dashboard se mettent à jour automatiquement.
+        </div>
+      </section>
+
+      <!-- Élèves -->
+      <section id="students" class="doc-section">
+        <h1>👨‍🎓 Gestion des Élèves</h1>
+        
+        <h2>Ajouter un élève</h2>
+        <ol>
+          <li>Cliquez sur <strong>"+ Ajouter un élève"</strong></li>
+          <li>Remplissez les informations obligatoires :
+            <ul>
+              <li>Nom et Prénom</li>
+              <li>Email</li>
+            </ul>
+          </li>
+          <li>Ajoutez les informations optionnelles :
+            <ul>
+              <li>Téléphone, Date de naissance, Adresse</li>
+              <li>Niveau scolaire</li>
+              <li><strong>Informations du parent/tuteur</strong></li>
+            </ul>
+          </li>
+          <li>Cliquez sur <strong>"Ajouter"</strong></li>
+        </ol>
+
+        <h2>Rechercher et filtrer</h2>
+        <ul>
+          <li><strong>Barre de recherche</strong> : Cherchez par nom, prénom ou email</li>
+          <li><strong>Filtre par niveau</strong> : Affichez seulement un niveau spécifique</li>
+          <li><strong>Filtre par statut</strong> : Actif ou Inactif</li>
+          <li><strong>Bouton Réinitialiser</strong> : Effacez tous les filtres</li>
+        </ul>
+
+        <h2>Modifier un élève</h2>
+        <ol>
+          <li>Cliquez sur <strong>"✏️ Modifier"</strong> sur la fiche de l'élève</li>
+          <li>Modifiez les informations souhaitées</li>
+          <li>Cliquez sur <strong>"Modifier"</strong></li>
+        </ol>
+
+        <h2>Exporter la liste</h2>
+        <ul>
+          <li><strong>📄 Export PDF</strong> : Génère un PDF avec la liste filtrée</li>
+          <li><strong>📊 Export Excel</strong> : Génère un fichier Excel avec toutes les données</li>
+        </ul>
+
+        <div class="success-box">
+          <strong>✅ Astuce :</strong> Utilisez les filtres avant d'exporter pour obtenir une liste personnalisée.
+        </div>
+      </section>
+
+      <!-- Groupes -->
+      <section id="groups" class="doc-section">
+        <h1>👥 Gestion des Groupes</h1>
+        
+        <h2>Créer un groupe</h2>
+        <ol>
+          <li>Cliquez sur <strong>"+ Ajouter un groupe"</strong></li>
+          <li>Remplissez les informations :
+            <ul>
+              <li>Nom du groupe</li>
+              <li>Description (optionnel)</li>
+              <li>Niveau et année académique</li>
+            </ul>
+          </li>
+          <li><strong>Informations des séances</strong> :
+            <ul>
+              <li>Lieu</li>
+              <li>Jour de la séance</li>
+              <li>Horaires (début et fin)</li>
+            </ul>
+          </li>
+          <li><strong>Assigner des élèves</strong> :
+            <ul>
+              <li>Cochez les élèves à ajouter au groupe</li>
+            </ul>
+          </li>
+          <li>Cliquez sur <strong>"Créer"</strong></li>
+        </ol>
+
+        <h2>Rechercher et filtrer</h2>
+        <ul>
+          <li><strong>Recherche</strong> : Par nom, description ou lieu</li>
+          <li><strong>Filtre par niveau</strong></li>
+          <li><strong>Filtre par jour</strong> : Lundi, Mardi, etc.</li>
+          <li><strong>Filtre par statut</strong> : Actif ou Inactif</li>
+        </ul>
+
+        <h2>Affichage des informations</h2>
+        <p>Chaque carte de groupe affiche :</p>
+        <ul>
+          <li>Nom et description</li>
+          <li>Niveau et année académique</li>
+          <li>Informations des séances (lieu, jour, horaires)</li>
+          <li><strong>Liste des élèves inscrits</strong></li>
+        </ul>
+      </section>
+
+      <!-- Paiements -->
+      <section id="payments" class="doc-section">
+        <h1>💰 Gestion des Paiements</h1>
+        
+        <h2>Enregistrer un paiement</h2>
+        <ol>
+          <li>Cliquez sur <strong>"+ Enregistrer un paiement"</strong></li>
+          <li>Sélectionnez l'élève</li>
+          <li><strong>Gestion des séances</strong> :
+            <ul>
+              <li>Entrez le <strong>prix par séance</strong></li>
+              <li>Cliquez sur <strong>"+ Ajouter une date de séance"</strong></li>
+              <li>Sélectionnez les dates des séances</li>
+              <li>Le <strong>nombre de séances</strong> s'incrémente automatiquement</li>
+              <li>Le <strong>montant total</strong> se calcule automatiquement</li>
+            </ul>
+          </li>
+          <li>Choisissez la méthode de paiement</li>
+          <li>Ajoutez des notes si nécessaire</li>
+          <li>Cliquez sur <strong>"Enregistrer"</strong></li>
+        </ol>
+
+        <h2>Calcul automatique</h2>
+        <div class="info-box">
+          <strong>💡 Fonctionnement :</strong><br>
+          Montant Total = Prix par séance × Nombre de séances<br>
+          Exemple : 25 DT × 4 séances = 100 DT
+        </div>
+
+        <h2>Rechercher et filtrer</h2>
+        <ul>
+          <li><strong>Recherche</strong> : Par nom d'élève ou notes</li>
+          <li><strong>Filtre par mois</strong></li>
+          <li><strong>Filtre par statut</strong> : Payé, En attente, Annulé</li>
+          <li><strong>Filtre par méthode</strong> : Espèces, Virement, Chèque, Carte</li>
+        </ul>
+
+        <h2>Statistiques affichées</h2>
+        <ul>
+          <li>Total des paiements (tous)</li>
+          <li>Total du mois en cours</li>
+        </ul>
+      </section>
+
+      <!-- Présences -->
+      <section id="attendance" class="doc-section">
+        <h1>📋 Gestion des Présences</h1>
+        
+        <h2>Marquer les présences</h2>
+        <ol>
+          <li>Sélectionnez un <strong>groupe</strong></li>
+          <li>Choisissez la <strong>date de la séance</strong></li>
+          <li>Pour chaque élève, cliquez sur :
+            <ul>
+              <li><strong>✅ Présent</strong></li>
+              <li><strong>❌ Absent</strong></li>
+              <li><strong>⏰ Retard</strong></li>
+            </ul>
+          </li>
+          <li>Ajoutez des notes si nécessaire</li>
+          <li>Cliquez sur <strong>"💾 Enregistrer les présences"</strong></li>
+        </ol>
+
+        <h2>Statistiques affichées</h2>
+        <p>En haut de la page, vous voyez :</p>
+        <ul>
+          <li>Nombre de présents</li>
+          <li>Nombre d'absents</li>
+          <li>Nombre de retards</li>
+          <li><strong>Taux de présence global</strong></li>
+        </ul>
+
+        <h2>Historique des présences</h2>
+        <ol>
+          <li>Cliquez sur <strong>"📋 Voir l'historique"</strong></li>
+          <li>Utilisez les filtres :
+            <ul>
+              <li>Date début et fin</li>
+              <li>Groupe</li>
+              <li>Statut (Présent, Absent, Retard)</li>
+            </ul>
+          </li>
+          <li>Visualisez l'historique complet</li>
+        </ol>
+      </section>
+
+      <!-- Statistiques -->
+      <section id="statistics" class="doc-section">
+        <h1>📊 Statistiques et Graphiques</h1>
+        
+        <h2>Cartes statistiques</h2>
+        <p>En haut de la page, 4 cartes affichent :</p>
+        <ul>
+          <li><strong>Total Élèves</strong></li>
+          <li><strong>Revenus Totaux</strong></li>
+          <li><strong>Taux de Présence</strong></li>
+          <li><strong>Total Paiements</strong></li>
+        </ul>
+
+        <h2>Graphiques disponibles</h2>
+        <ol>
+          <li><strong>📈 Revenus par Mois</strong>
+            <ul>
+              <li>Graphique en ligne</li>
+              <li>Évolution des revenus dans le temps</li>
+            </ul>
+          </li>
+          <li><strong>💳 Méthodes de Paiement</strong>
+            <ul>
+              <li>Graphique camembert</li>
+              <li>Répartition par méthode (Espèces, Virement, etc.)</li>
+            </ul>
+          </li>
+          <li><strong>📋 Présences / Absences</strong>
+            <ul>
+              <li>Graphique donut</li>
+              <li>Répartition Présents, Absents, Retards</li>
+            </ul>
+          </li>
+          <li><strong>👥 Statut des Élèves</strong>
+            <ul>
+              <li>Graphique en barres</li>
+              <li>Comparaison Actifs vs Inactifs</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="success-box">
+          <strong>✅ Info :</strong> Les graphiques se mettent à jour automatiquement en temps réel.
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section id="notifications" class="doc-section">
+        <h1>🔔 Système de Notifications</h1>
+        
+        <h2>Accéder aux notifications</h2>
+        <ul>
+          <li>Cliquez sur la <strong>cloche 🔔</strong> en haut à droite du dashboard</li>
+          <li>Le badge rouge indique le nombre de notifications non lues</li>
+        </ul>
+
+        <h2>Types de notifications</h2>
+        <ol>
+          <li><strong>⚠️ Paiements en retard</strong>
+            <ul>
+              <li>Élèves qui n'ont pas payé le mois en cours</li>
+            </ul>
+          </li>
+          <li><strong>❌ Paiements en attente urgent</strong>
+            <ul>
+              <li>Paiements en attente depuis plus de 7 jours</li>
+            </ul>
+          </li>
+          <li><strong>⚠️ Absences répétées</strong>
+            <ul>
+              <li>3 absences ou plus sur les 10 dernières séances</li>
+            </ul>
+          </li>
+          <li><strong>ℹ️ Retards fréquents</strong>
+            <ul>
+              <li>4 retards ou plus sur les 10 dernières séances</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h2>Actions disponibles</h2>
+        <ul>
+          <li><strong>Cliquer sur une notification</strong> : Accède directement à la page concernée</li>
+          <li><strong>Tout lire</strong> : Marque toutes les notifications comme lues</li>
+          <li><strong>✕ Supprimer</strong> : Supprime une notification spécifique</li>
+          <li><strong>Tout effacer</strong> : Supprime toutes les notifications</li>
+        </ul>
+
+        <div class="info-box">
+          <strong>💡 Astuce :</strong> Les notifications sont vérifiées automatiquement à chaque connexion au dashboard.
+        </div>
+      </section>
+
+      <!-- Export -->
+      <section id="export" class="doc-section">
+        <h1>📄 Exports PDF et Excel</h1>
+        
+        <h2>Modules avec export</h2>
+        <ul>
+          <li>✅ Élèves</li>
+          <li>✅ Groupes</li>
+          <li>✅ Paiements</li>
+        </ul>
+
+        <h2>Export PDF</h2>
+        <ol>
+          <li>Appliquez les filtres souhaités (optionnel)</li>
+          <li>Cliquez sur <strong>"📄 Export PDF"</strong></li>
+          <li>Un fichier PDF se télécharge automatiquement</li>
+        </ol>
+        <p><strong>Contenu du PDF :</strong></p>
+        <ul>
+          <li>Titre du document</li>
+          <li>Date d'export</li>
+          <li>Nombre total d'éléments</li>
+          <li>Tableau avec les données filtrées</li>
+        </ul>
+
+        <h2>Export Excel</h2>
+        <ol>
+          <li>Appliquez les filtres souhaités (optionnel)</li>
+          <li>Cliquez sur <strong>"📊 Export Excel"</strong></li>
+          <li>Un fichier .xlsx se télécharge automatiquement</li>
+        </ol>
+        <p><strong>Avantages Excel :</strong></p>
+        <ul>
+          <li>Contient TOUTES les colonnes (plus de détails que PDF)</li>
+          <li>Modifiable dans Excel/Calc</li>
+          <li>Utilisable pour des analyses supplémentaires</li>
+        </ul>
+
+        <div class="warning-box">
+          <strong>⚠️ Important :</strong> Les exports respectent les filtres actifs. Réinitialisez les filtres pour exporter toutes les données.
+        </div>

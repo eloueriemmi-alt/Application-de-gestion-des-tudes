@@ -1,0 +1,60 @@
+<div class="notification-bell-container">
+  <button class="bell-button" (click)="toggleDropdown()">
+    🔔
+    <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+  </button>
+
+  <div *ngIf="showDropdown" class="notification-dropdown">
+    <div class="dropdown-header">
+      <h3>Notifications</h3>
+      <div class="header-actions">
+        <button (click)="markAllAsRead()" class="btn-small" *ngIf="unreadCount > 0">
+          Tout lire
+        </button>
+        <button (click)="clearAll()" class="btn-small btn-danger" *ngIf="notifications.length > 0">
+          Tout effacer
+        </button>
+      </div>
+    </div>
+
+    <div class="notifications-list" *ngIf="notifications.length > 0">
+      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-item"
+        [ngClass]="getTypeClass(notification.type)"
+        [class.unread]="!notification.read"
+        (click)="markAsRead(notification)">
+        
+        <div class="notification-icon">
+          {{ getIcon(notification.type) }}
+        </div>
+        
+        <div class="notification-content">
+          <h4>{{ notification.title }}</h4>
+          <p>{{ notification.message }}</p>
+          <span class="notification-time">
+            {{ notification.timestamp | date:'dd/MM/yyyy HH:mm' }}
+          </span>
+        </div>
+
+        <button 
+          class="delete-btn" 
+          (click)="deleteNotification($event, notification.id)"
+          title="Supprimer">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="notifications.length === 0">
+      <p>🔕 Aucune notification</p>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay pour fermer le dropdown -->
+<div 
+  *ngIf="showDropdown" 
+  class="notification-overlay" 
+  (click)="toggleDropdown()">
+</div>
