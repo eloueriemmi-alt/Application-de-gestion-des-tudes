@@ -6,14 +6,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   // Configuration CORS pour permettre les requêtes depuis le frontend
-  app.enableCors({
-    origin: [
-      'http://localhost:4200',
-      'https://votre-frontend.vercel.app', // On modifiera ça après
-    ],
-    credentials: true,
-  });
-  
+ app.enableCors({
+  origin: [
+    'http://localhost:4200',
+    'https://application-de-gestion-des-etudes.vercel.app',
+    'https://application-de-gestion-git-2d529d-walid-eloueriemmis-projects.vercel.app',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
   // Validation globale
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
