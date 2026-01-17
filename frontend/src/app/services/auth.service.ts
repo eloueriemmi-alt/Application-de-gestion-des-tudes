@@ -1,59 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-interface User {
-  id: number;
-  email: string;
-  nom: string;
-  prenom: string;
-  role: string;
-}
-
 interface AuthResponse {
-  user: User;
   access_token: string;
+  user: any;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
- private apiUrl = `${environment.apiUrl}/auth`;
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private apiUrl = `${environment.apiUrl}/auth`;
+  private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    const token = this.getToken();
-    if (token) {
-      // Récupérer l'utilisateur si un token existe
-      const user = localStorage.getItem('user');
-      if (user) {
-        this.currentUserSubject.next(JSON.parse(user));
-      }
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.currentUserSubject.next(JSON.parse(user));
     }
   }
 
-  register(email: string, password: string, nom: string, prenom: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
-      email,
-      password,
-      nom,
-      prenom
-    }).pipe(
-      tap(response => this.handleAuth(response))
+  login(credentials: { email: string; password: string }): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        this.currentUserSubject.next(response.user);
+      })
     );
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, {
-      email,
-      password
-    }).pipe(
-      tap(response => this.handleAuth(response))
-    );
+  register(userData: { nom: string; prenom: string; email: string; password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, userData);
   }
 
   logout(): void {
@@ -68,11 +50,5 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
-  }
-
-  private handleAuth(response: AuthResponse): void {
-    localStorage.setItem('token', response.access_token);
-    localStorage.setItem('user', JSON.stringify(response.user));
-    this.currentUserSubject.next(response.user);
   }
 }

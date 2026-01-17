@@ -1,0 +1,72 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="logo-section">
+      <h1>📚 Gestion Scolaire</h1>
+      <p>Créer un compte enseignant</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input 
+          type="text" 
+          id="nom" 
+          formControlName="nom" 
+          placeholder="Votre nom"
+          [class.error]="registerForm.get('nom')?.invalid && registerForm.get('nom')?.touched">
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input 
+          type="text" 
+          id="prenom" 
+          formControlName="prenom" 
+          placeholder="Votre prénom"
+          [class.error]="registerForm.get('prenom')?.invalid && registerForm.get('prenom')?.touched">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="votre.email@example.com"
+          [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Minimum 6 caractères"
+          [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          formControlName="confirmPassword" 
+          placeholder="Confirmez votre mot de passe"
+          [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="isLoading">
+        {{ isLoading ? 'Inscription en cours...' : 'S\'inscrire' }}
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p>Vous avez déjà un compte ? <a (click)="goToLogin()">Se connecter</a></p>
+    </div>
+  </div>
+</div>

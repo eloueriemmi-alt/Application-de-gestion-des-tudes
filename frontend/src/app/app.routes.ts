@@ -9,9 +9,11 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { DocumentationComponent } from './pages/documentation/documentation.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+   { path: 'register', component: RegisterComponent },
   { 
     path: 'dashboard', 
     component: DashboardComponent,

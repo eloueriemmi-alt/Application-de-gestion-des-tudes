@@ -30,7 +30,7 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.email, this.password).subscribe({
+   this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
       },
@@ -39,5 +39,8 @@ export class LoginComponent {
         this.errorMessage = error.error.message || 'Erreur de connexion';
       }
     });
+  }
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 }
