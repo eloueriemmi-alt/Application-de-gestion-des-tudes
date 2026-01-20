@@ -83,6 +83,10 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/profile']);
   }
 
+  goToAdmin() {
+    this.router.navigate(['/admin/users']);
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

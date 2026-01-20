@@ -8,6 +8,9 @@
        <button (click)="goToDocumentation()" class="btn-doc" title="Documentation">
     📚
   </button>
+   <button *ngIf="user?.role === 'superadmin'" (click)="goToAdmin()" class="btn-admin" title="Administration">
+    👑
+  </button>
       <span class="user-name" *ngIf="user" (click)="goToProfile()" style="cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#333'">
         👤 {{ user.prenom }} {{ user.nom }}
       </span>

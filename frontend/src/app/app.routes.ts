@@ -10,6 +10,7 @@ import { authGuard } from './guards/auth.guard';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { DocumentationComponent } from './pages/documentation/documentation.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -56,6 +57,12 @@ export const routes: Routes = [
     component: DocumentationComponent,
     canActivate: [authGuard]
   },
+
+  { 
+  path: 'admin/users', 
+  component: AdminUsersComponent,
+  canActivate: [authGuard]
+},
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }

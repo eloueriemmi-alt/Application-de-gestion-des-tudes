@@ -22,4 +22,21 @@ export class UsersService {
   async findById(id: number): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
   }
+
+  async findAll() {
+    return this.usersRepository.find({
+      select: ['id', 'email', 'nom', 'prenom', 'role', 'createdAt'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async updateRole(id: number, role: string) {
+    await this.usersRepository.update(id, { role });
+    return { message: 'Rôle mis à jour avec succès' };
+  }
+
+  async remove(id: number) {
+    await this.usersRepository.delete(id);
+    return { message: 'Utilisateur supprimé avec succès' };
+  }
 }

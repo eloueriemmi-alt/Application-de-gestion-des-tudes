@@ -1,0 +1,89 @@
+<div class="admin-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h2>👑 Administration - Gestion des Utilisateurs</h2>
+    </div>
+    <div class="navbar-actions">
+      <button (click)="goToDashboard()" class="btn-secondary">
+        ← Dashboard
+      </button>
+      <button (click)="logout()" class="logout-button">
+        Déconnexion
+      </button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div *ngIf="isLoading" class="loading">
+      Chargement des utilisateurs...
+    </div>
+
+    <div *ngIf="!isLoading" class="users-section">
+      <div class="section-header">
+        <h3>📋 Liste des Utilisateurs ({{ filteredUsers.length }})</h3>
+      </div>
+
+      <div class="table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Date d'inscription</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers" [class.superadmin-row]="user.role === 'superadmin'">
+              <td>{{ user.id }}</td>
+              <td>{{ user.nom }}</td>
+              <td>{{ user.prenom }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="role-badge" [ngClass]="user.role === 'superadmin' ? 'badge-admin' : 'badge-teacher'">
+                  {{ user.role === 'superadmin' ? '👑 SuperAdmin' : '👨‍🏫 Enseignant' }}
+                </span>
+              </td>
+              <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button 
+                    *ngIf="user.role !== 'superadmin'" 
+                    (click)="changeRole(user.id, 'superadmin')" 
+                    class="btn-action btn-promote"
+                    title="Promouvoir en SuperAdmin">
+                    👑 Promouvoir
+                  </button>
+                  <button 
+                    *ngIf="user.role === 'superadmin' && user.id !== currentUser?.id" 
+                    (click)="changeRole(user.id, 'enseignant')" 
+                    class="btn-action btn-demote"
+                    title="Rétrograder en Enseignant">
+                    ⬇️ Rétrograder
+                  </button>
+                  <button 
+                    *ngIf="user.id !== currentUser?.id" 
+                    (click)="deleteUser(user.id, user.email)" 
+                    class="btn-action btn-delete"
+                    title="Supprimer">
+                    🗑️ Supprimer
+                  </button>
+                  <span *ngIf="user.id === currentUser?.id" class="current-user-badge">
+                    (Vous)
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="filteredUsers.length === 0" class="empty-state">
+        <p>Aucun utilisateur trouvé.</p>
+      </div>
+    </div>
+  </div>
+</div>

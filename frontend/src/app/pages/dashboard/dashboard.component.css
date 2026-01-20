@@ -153,3 +153,19 @@
 .btn-doc:hover {
   transform: scale(1.1);
 }
+
+.btn-admin {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #333;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-right: 15px;
+}
+
+.btn-admin:hover {
+  transform: scale(1.1);
+}
