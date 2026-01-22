@@ -87,8 +87,8 @@ export class StudentsComponent implements OnInit {
   }
 
   saveStudent() {
-    if (!this.currentStudent.nom || !this.currentStudent.prenom ) {
-      alert('');
+    if (!this.currentStudent.nom || !this.currentStudent.prenom || !this.currentStudent.email) {
+      alert('Veuillez remplir les champs obligatoires');
       return;
     }
 
