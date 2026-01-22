@@ -1,7 +1,7 @@
 export class CreateStudentDto {
   nom: string;
   prenom: string;
-  email: string;
+  email?: string;
   telephone?: string;
   dateNaissance?: string;
   adresse?: string;

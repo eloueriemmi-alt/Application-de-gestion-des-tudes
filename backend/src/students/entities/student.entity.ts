@@ -11,8 +11,8 @@ export class Student {
   @Column()
   prenom: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ unique: true, nullable: true })
+email: string;
 
   @Column({ nullable: true })
   telephone: string;

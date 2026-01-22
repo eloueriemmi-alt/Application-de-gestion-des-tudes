@@ -89,3 +89,24 @@ input:focus {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.register-link p {
+  color: #666;
+  margin: 0;
+}
+
+.register-link a {
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
