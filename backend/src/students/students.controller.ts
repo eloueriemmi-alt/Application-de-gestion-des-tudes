@@ -8,7 +8,12 @@ export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-  create(@Body(new ValidationPipe({ skipMissingProperties: true })) createStudentDto: CreateStudentDto) {
+  create(@Body(new ValidationPipe({ 
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: false,
+  })) createStudentDto: CreateStudentDto) {
+    console.log('Données reçues:', createStudentDto);
     return this.studentsService.create(createStudentDto);
   }
 
@@ -23,7 +28,12 @@ export class StudentsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body(new ValidationPipe({ skipMissingProperties: true })) updateStudentDto: UpdateStudentDto) {
+  update(@Param('id') id: string, @Body(new ValidationPipe({ 
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: false,
+  })) updateStudentDto: UpdateStudentDto) {
+    console.log('Données reçues pour update:', updateStudentDto);
     return this.studentsService.update(+id, updateStudentDto);
   }
 
