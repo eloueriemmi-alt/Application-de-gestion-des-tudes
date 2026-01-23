@@ -8,14 +8,10 @@ export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-  create(@Body(new ValidationPipe({ 
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: false,
-  })) createStudentDto: CreateStudentDto) {
-    console.log('Données reçues:', createStudentDto);
-    return this.studentsService.create(createStudentDto);
-  }
+create(@Body() createStudentDto: CreateStudentDto) {
+  console.log('Raw body reçu:', createStudentDto);
+  return this.studentsService.create(createStudentDto);
+}
 
   @Get()
   findAll() {
