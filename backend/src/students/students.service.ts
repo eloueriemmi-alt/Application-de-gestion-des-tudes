@@ -16,18 +16,20 @@ export class StudentsService {
   console.log('Service create() - DTO reçu:', createStudentDto);
   
   const student = new Student();
-  student.nom = createStudentDto.nom;
-  student.prenom = createStudentDto.prenom;
-  student.email = createStudentDto.email || null;
-  student.telephone = createStudentDto.telephone || null;
-  student.dateNaissance = createStudentDto.dateNaissance || null;
-  student.adresse = createStudentDto.adresse || null;
-  student.niveau = createStudentDto.niveau || null;
-  student.statut = createStudentDto.statut || 'actif';
-  student.nomParent = createStudentDto.nomParent || null;
-  student.prenomParent = createStudentDto.prenomParent || null;
-  student.telephoneParent = createStudentDto.telephoneParent || null;
-  student.emailParent = createStudentDto.emailParent || null;
+  Object.assign(student, {
+    nom: createStudentDto.nom,
+    prenom: createStudentDto.prenom,
+    email: createStudentDto.email || null,
+    telephone: createStudentDto.telephone || null,
+    dateNaissance: createStudentDto.dateNaissance || null,
+    adresse: createStudentDto.adresse || null,
+    niveau: createStudentDto.niveau || null,
+    statut: createStudentDto.statut || 'actif',
+    nomParent: createStudentDto.nomParent || null,
+    prenomParent: createStudentDto.prenomParent || null,
+    telephoneParent: createStudentDto.telephoneParent || null,
+    emailParent: createStudentDto.emailParent || null,
+  });
 
   console.log('Service create() - Student à sauvegarder:', student);
   
