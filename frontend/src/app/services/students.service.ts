@@ -40,11 +40,11 @@ export class StudentsService {
     return this.http.get<Student>(`${this.apiUrl}/${id}`);
   }
 
-  create(student: Student): Observable<Student> {
+  createStudent(student: Student): Observable<Student> {
     return this.http.post<Student>(this.apiUrl, student);
   }
 
-  update(id: number, student: Partial<Student>): Observable<Student> {
+  updateStudent(id: number, student: Partial<Student>): Observable<Student> {
     return this.http.patch<Student>(`${this.apiUrl}/${id}`, student);
   }
 
