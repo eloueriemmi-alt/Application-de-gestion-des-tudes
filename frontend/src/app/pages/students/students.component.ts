@@ -320,41 +320,52 @@ export class StudentsComponent implements OnInit {
   }
 
   saveStudent() {
-    if (this.studentForm.invalid) {
-      alert('Veuillez remplir correctement les champs obligatoires (Nom et Prénom)');
-      return;
-    }
+  console.log('=== saveStudent() appelée ===');
+  console.log('FormData valid:', this.studentForm.valid);
+  console.log('FormData errors:', this.studentForm.errors);
+  console.log('Nom control:', this.studentForm.get('nom')?.value, this.studentForm.get('nom')?.errors);
+  console.log('Prenom control:', this.studentForm.get('prenom')?.value, this.studentForm.get('prenom')?.errors);
+  console.log('FormData value:', this.studentForm.value);
+  console.log('FormData getRawValue:', this.studentForm.getRawValue());
 
-    const formData = this.studentForm.getRawValue();
-    
-    console.log('Données à envoyer:', formData);
-
-    if (this.editMode && formData.id) {
-      this.studentsService.update(formData.id, formData).subscribe({
-        next: () => {
-          alert('Élève modifié avec succès');
-          this.loadStudents();
-          this.closeForm();
-        },
-        error: (error: any) => {
-          console.error('Erreur:', error);
-          alert('Erreur lors de la modification: ' + (error.error?.message || ''));
-        }
-      });
-    } else {
-      this.studentsService.create(formData).subscribe({
-        next: () => {
-          alert('Élève ajouté avec succès');
-          this.loadStudents();
-          this.closeForm();
-        },
-        error: (error: any) => {
-          console.error('Erreur:', error);
-          alert('Erreur lors de la création: ' + (error.error?.message || ''));
-        }
-      });
-    }
+  if (this.studentForm.invalid) {
+    console.log('❌ Formulaire INVALIDE - Arrêt');
+    alert('Veuillez remplir correctement les champs obligatoires (Nom et Prénom)');
+    return;
   }
+
+  console.log('✅ Formulaire VALIDE - Envoi des données');
+  const formData = this.studentForm.getRawValue();
+  
+  console.log('Données à envoyer:', formData);
+
+  if (this.editMode && formData.id) {
+    this.studentsService.update(formData.id, formData).subscribe({
+      next: () => {
+        alert('Élève modifié avec succès');
+        this.loadStudents();
+        this.closeForm();
+      },
+      error: (error: any) => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la modification: ' + (error.error?.message || ''));
+      }
+    });
+  } else {
+    console.log('Création d\'un nouvel élève...');
+    this.studentsService.create(formData).subscribe({
+      next: () => {
+        alert('Élève ajouté avec succès');
+        this.loadStudents();
+        this.closeForm();
+      },
+      error: (error: any) => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la création: ' + (error.error?.message || ''));
+      }
+    });
+  }
+}
 
   deleteStudent(id: number) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')) {

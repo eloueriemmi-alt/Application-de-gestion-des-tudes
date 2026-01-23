@@ -13,176 +13,186 @@
     </div>
   </nav>
 
- <div class="header-actions">
-      <h1>Liste des Élèves</h1>
-      <div class="action-buttons">
-        <button (click)="exportToPDF()" class="btn-export btn-pdf">
-          📄 Export PDF
-        </button>
-        <button (click)="exportToExcel()" class="btn-export btn-excel">
-          📊 Export Excel
-        </button>
-        <button (click)="openAddForm()" class="btn-primary">
-          + Ajouter un élève
-        </button>
-      </div>
-    </div>
-
-    <!-- Barre de recherche et filtres -->
-    <div class="filters-container">
-      <div class="search-box">
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          (input)="applyFilters()"
-          placeholder="🔍 Rechercher par nom, prénom ou email..."
-          class="search-input">
-      </div>
-      
-      <div class="filters-row">
-        <select [(ngModel)]="filterNiveau" (change)="applyFilters()" class="filter-select">
-          <option value="">Tous les niveaux</option>
-          <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
-        </select>
-
-        <select [(ngModel)]="filterStatut" (change)="applyFilters()" class="filter-select">
-          <option value="">Tous les statuts</option>
-          <option value="actif">Actif</option>
-          <option value="inactif">Inactif</option>
-        </select>
-
-        <button (click)="resetFilters()" class="btn-reset">
-          🔄 Réinitialiser
-        </button>
-      </div>
-
-      <div class="results-info">
-        <p>{{ filteredStudents.length }} élève(s) trouvé(s) sur {{ students.length }}</p>
-      </div>
-    </div>
-
-    <div *ngIf="isLoading" class="loading">
-      Chargement...
-    </div>
-
-    <div *ngIf="!isLoading && students.length === 0" class="empty-state">
-      <p>Aucun élève enregistré</p>
+  <div class="header-actions">
+    <h1>Liste des Élèves</h1>
+    <div class="action-buttons">
+      <button (click)="exportToPDF()" class="btn-export btn-pdf">
+        📄 Export PDF
+      </button>
+      <button (click)="exportToExcel()" class="btn-export btn-excel">
+        📊 Export Excel
+      </button>
       <button (click)="openAddForm()" class="btn-primary">
-        Ajouter le premier élève
+        + Ajouter un élève
+      </button>
+    </div>
+  </div>
+
+  <!-- Barre de recherche et filtres -->
+  <div class="filters-container">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="applyFilters()"
+        placeholder="🔍 Rechercher par nom, prénom ou email..."
+        class="search-input">
+    </div>
+    
+    <div class="filters-row">
+      <select [(ngModel)]="filterNiveau" (change)="applyFilters()" class="filter-select">
+        <option value="">Tous les niveaux</option>
+        <option *ngFor="let niveau of niveaux" [value]="niveau">{{ niveau }}</option>
+      </select>
+
+      <select [(ngModel)]="filterStatut" (change)="applyFilters()" class="filter-select">
+        <option value="">Tous les statuts</option>
+        <option value="actif">Actif</option>
+        <option value="inactif">Inactif</option>
+      </select>
+
+      <button (click)="resetFilters()" class="btn-reset">
+        🔄 Réinitialiser
       </button>
     </div>
 
-    <div *ngIf="!isLoading && filteredStudents.length > 0" class="students-grid">
-      <div *ngFor="let student of filteredStudents" class="student-card">
-        <div class="student-header">
-          <h3>{{ student.prenom }} {{ student.nom }}</h3>
-          <span class="badge" [class.active]="student.statut === 'actif'">
-            {{ student.statut }}
-          </span>
-        </div>
-        <div class="student-info">
-          <p><strong>📧 Email:</strong> {{ student.email }}</p>
-          <p *ngIf="student.telephone"><strong>📱 Tél:</strong> {{ student.telephone }}</p>
-          <p *ngIf="student.niveau"><strong>📚 Niveau:</strong> {{ student.niveau }}</p>
-          <p *ngIf="student.dateNaissance"><strong>🎂 Né(e) le:</strong> {{ student.dateNaissance }}</p>
-          <p *ngIf="student.adresse"><strong>📍 Adresse:</strong> {{ student.adresse }}</p>
-        </div>
-        <div class="student-actions">
-          <button (click)="openEditForm(student)" class="btn-edit">
-            ✏️ Modifier
-          </button>
-          <button (click)="deleteStudent(student.id!)" class="btn-delete">
-            🗑️ Supprimer
-          </button>
-        </div>
+    <div class="results-info">
+      <p>{{ filteredStudents.length }} élève(s) trouvé(s) sur {{ students.length }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Chargement...
+  </div>
+
+  <div *ngIf="!isLoading && students.length === 0" class="empty-state">
+    <p>Aucun élève enregistré</p>
+    <button (click)="openAddForm()" class="btn-primary">
+      Ajouter le premier élève
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && filteredStudents.length > 0" class="students-grid">
+    <div *ngFor="let student of filteredStudents" class="student-card">
+      <div class="student-header">
+        <h3>{{ student.prenom }} {{ student.nom }}</h3>
+        <span class="badge" [class.active]="student.statut === 'actif'">
+          {{ student.statut }}
+        </span>
+      </div>
+      <div class="student-info">
+        <p><strong>📧 Email:</strong> {{ student.email || '-' }}</p>
+        <p *ngIf="student.telephone"><strong>📱 Tél:</strong> {{ student.telephone }}</p>
+        <p *ngIf="student.niveau"><strong>📚 Niveau:</strong> {{ student.niveau }}</p>
+        <p *ngIf="student.dateNaissance"><strong>🎂 Né(e) le:</strong> {{ student.dateNaissance }}</p>
+        <p *ngIf="student.adresse"><strong>📍 Adresse:</strong> {{ student.adresse }}</p>
+      </div>
+      <div class="student-actions">
+        <button (click)="openEditForm(student)" class="btn-edit">
+          ✏️ Modifier
+        </button>
+        <button (click)="deleteStudent(student.id!)" class="btn-delete">
+          🗑️ Supprimer
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal Formulaire -->
-  <div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h2>{{ editMode ? 'Modifier' : 'Ajouter' }} un élève</h2>
-      
-      <form (ngSubmit)="saveStudent()" class="student-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nom *</label>
-            <input type="text" [(ngModel)]="currentStudent.nom" name="nom" required>
-          </div>
-          <div class="form-group">
-            <label>Prénom *</label>
-            <input type="text" [(ngModel)]="currentStudent.prenom" name="prenom" required>
-          </div>
-        </div>
-
+<!-- Modal Formulaire -->
+<div *ngIf="showForm" class="modal-overlay" (click)="closeForm()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>{{ editMode ? 'Modifier' : 'Ajouter' }} un élève</h2>
+    
+    <form [formGroup]="studentForm" (ngSubmit)="saveStudent()" class="student-form">
+      <div class="form-row">
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" [(ngModel)]="currentStudent.email" name="email" >
+          <label>Nom *</label>
+          <input type="text" formControlName="nom">
+          <span class="error" *ngIf="studentForm.get('nom')?.invalid && studentForm.get('nom')?.touched">
+            Le nom est obligatoire
+          </span>
         </div>
-
         <div class="form-group">
-          <label>Téléphone</label>
-          <input type="text" [(ngModel)]="currentStudent.telephone" name="telephone" placeholder="+216...">
+          <label>Prénom *</label>
+          <input type="text" formControlName="prenom">
+          <span class="error" *ngIf="studentForm.get('prenom')?.invalid && studentForm.get('prenom')?.touched">
+            Le prénom est obligatoire
+          </span>
         </div>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Date de naissance</label>
-            <input type="date" [(ngModel)]="currentStudent.dateNaissance" name="dateNaissance">
-          </div>
-          <div class="form-group">
-            <label>Niveau</label>
-            <input type="text" [(ngModel)]="currentStudent.niveau" name="niveau" placeholder="Ex: 3ème année">
-          </div>
-        </div>
+      <div class="form-group">
+        <label>Email (optionnel)</label>
+        <input type="email" formControlName="email">
+        <span class="error" *ngIf="studentForm.get('email')?.invalid && studentForm.get('email')?.touched">
+          Email invalide
+        </span>
+      </div>
 
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input type="text" formControlName="telephone" placeholder="+216...">
+      </div>
+
+      <div class="form-row">
         <div class="form-group">
-          <label>Adresse</label>
-          <input type="text" [(ngModel)]="currentStudent.adresse" name="adresse">
+          <label>Date de naissance</label>
+          <input type="date" formControlName="dateNaissance">
         </div>
-<h3 style="margin: 20px 0 10px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
-          👨‍👩‍👦 Informations du Parent/Tuteur
-        </h3>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nom du parent</label>
-            <input type="text" [(ngModel)]="currentStudent.nomParent" name="nomParent">
-          </div>
-          <div class="form-group">
-            <label>Prénom du parent</label>
-            <input type="text" [(ngModel)]="currentStudent.prenomParent" name="prenomParent">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Téléphone du parent</label>
-            <input type="text" [(ngModel)]="currentStudent.telephoneParent" name="telephoneParent" placeholder="+216...">
-          </div>
-          <div class="form-group">
-            <label>Email du parent</label>
-            <input type="email" [(ngModel)]="currentStudent.emailParent" name="emailParent">
-          </div>
-        </div>
-
         <div class="form-group">
-          <label>Statut</label>
-          <select [(ngModel)]="currentStudent.statut" name="statut">
-            <option value="actif">Actif</option>
-            <option value="inactif">Inactif</option>
-          </select>
+          <label>Niveau</label>
+          <input type="text" formControlName="niveau" placeholder="Ex: 3ème année">
         </div>
+      </div>
 
-        <div class="modal-actions">
-          <button type="button" (click)="closeForm()" class="btn-secondary">
-            Annuler
-          </button>
-          <button type="submit" class="btn-primary">
-            {{ editMode ? 'Modifier' : 'Ajouter' }}
-          </button>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input type="text" formControlName="adresse">
+      </div>
+
+      <h3 style="margin: 20px 0 10px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+        👨‍👩‍👦 Informations du Parent/Tuteur
+      </h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom du parent</label>
+          <input type="text" formControlName="nomParent">
         </div>
-      </form>
-    </div>
+        <div class="form-group">
+          <label>Prénom du parent</label>
+          <input type="text" formControlName="prenomParent">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Téléphone du parent</label>
+          <input type="text" formControlName="telephoneParent" placeholder="+216...">
+        </div>
+        <div class="form-group">
+          <label>Email du parent</label>
+          <input type="email" formControlName="emailParent">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Statut</label>
+        <select formControlName="statut">
+          <option value="actif">Actif</option>
+          <option value="inactif">Inactif</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" (click)="closeForm()" class="btn-secondary">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="studentForm.invalid">
+          {{ editMode ? 'Modifier' : 'Ajouter' }}
+        </button>
+      </div>
+    </form>
   </div>
+</div>
