@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('students')
 export class Student {
@@ -11,42 +11,39 @@ export class Student {
   @Column()
   prenom: string;
 
-  @Column({ unique: true, nullable: true })
-email: string;
+  @Column({ nullable: true })
+  email: string | null;
 
   @Column({ nullable: true })
-  telephone: string;
+  telephone: string | null;
 
   @Column({ nullable: true })
-  dateNaissance: string;
+  dateNaissance: string | null;
 
   @Column({ nullable: true })
-  adresse: string;
+  adresse: string | null;
 
   @Column({ nullable: true })
-  niveau: string;
+  niveau: string | null;
 
   @Column({ default: 'actif' })
   statut: string;
 
- 
-
-   // Informations Parent
   @Column({ nullable: true })
-  nomParent: string;
+  nomParent: string | null;
 
   @Column({ nullable: true })
-  prenomParent: string;
+  prenomParent: string | null;
 
   @Column({ nullable: true })
-  telephoneParent: string;
+  telephoneParent: string | null;
 
   @Column({ nullable: true })
-  emailParent: string;
+  emailParent: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  updatedAt: Date | null;
 }

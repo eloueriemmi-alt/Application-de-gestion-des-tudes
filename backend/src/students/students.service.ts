@@ -12,10 +12,27 @@ export class StudentsService {
     private studentsRepository: Repository<Student>,
   ) {}
 
-  async create(createStudentDto: CreateStudentDto): Promise<Student> {
-    const student = this.studentsRepository.create(createStudentDto);
-    return this.studentsRepository.save(student);
-  }
+ async create(createStudentDto: CreateStudentDto): Promise<Student> {
+  console.log('Service create() - DTO reçu:', createStudentDto);
+  
+  const student = new Student();
+  student.nom = createStudentDto.nom;
+  student.prenom = createStudentDto.prenom;
+  student.email = createStudentDto.email || null;
+  student.telephone = createStudentDto.telephone || null;
+  student.dateNaissance = createStudentDto.dateNaissance || null;
+  student.adresse = createStudentDto.adresse || null;
+  student.niveau = createStudentDto.niveau || null;
+  student.statut = createStudentDto.statut || 'actif';
+  student.nomParent = createStudentDto.nomParent || null;
+  student.prenomParent = createStudentDto.prenomParent || null;
+  student.telephoneParent = createStudentDto.telephoneParent || null;
+  student.emailParent = createStudentDto.emailParent || null;
+
+  console.log('Service create() - Student à sauvegarder:', student);
+  
+  return this.studentsRepository.save(student);
+}
 
   async findAll(): Promise<Student[]> {
     return this.studentsRepository.find({
