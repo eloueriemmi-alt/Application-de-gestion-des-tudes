@@ -14,25 +14,37 @@ export class StudentsService {
 
 async create(createStudentDto: any): Promise<Student> {
   console.log('===== SERVICE CREATE =====');
-  console.log('DTO:', createStudentDto);
+  console.log('DTO reçu:', JSON.stringify(createStudentDto));
   
-  const student = this.studentsRepository.create({
-    nom: createStudentDto.nom || '',
-    prenom: createStudentDto.prenom || '',
-    email: createStudentDto.email || null,
-    telephone: createStudentDto.telephone || null,
-    dateNaissance: createStudentDto.dateNaissance || null,
-    adresse: createStudentDto.adresse || null,
-    niveau: createStudentDto.niveau || null,
-    statut: createStudentDto.statut || 'actif',
-    nomParent: createStudentDto.nomParent || null,
-    prenomParent: createStudentDto.prenomParent || null,
-    telephoneParent: createStudentDto.telephoneParent || null,
-    emailParent: createStudentDto.emailParent || null,
-  });
+  // Vérifier que nom et prenom ne sont pas vides
+  if (!createStudentDto.nom || !createStudentDto.prenom) {
+    throw new Error('Nom et prénom sont obligatoires');
+  }
+
+  const studentData = {
+    nom: String(createStudentDto.nom).trim(),
+    prenom: String(createStudentDto.prenom).trim(),
+    email: createStudentDto.email ? String(createStudentDto.email).trim() : null,
+    telephone: createStudentDto.telephone ? String(createStudentDto.telephone).trim() : null,
+    dateNaissance: createStudentDto.dateNaissance ? String(createStudentDto.dateNaissance).trim() : null,
+    adresse: createStudentDto.adresse ? String(createStudentDto.adresse).trim() : null,
+    niveau: createStudentDto.niveau ? String(createStudentDto.niveau).trim() : null,
+    statut: createStudentDto.statut ? String(createStudentDto.statut).trim() : 'actif',
+    nomParent: createStudentDto.nomParent ? String(createStudentDto.nomParent).trim() : null,
+    prenomParent: createStudentDto.prenomParent ? String(createStudentDto.prenomParent).trim() : null,
+    telephoneParent: createStudentDto.telephoneParent ? String(createStudentDto.telephoneParent).trim() : null,
+    emailParent: createStudentDto.emailParent ? String(createStudentDto.emailParent).trim() : null,
+  };
+
+  console.log('Data à créer:', JSON.stringify(studentData));
+
+  const student = this.studentsRepository.create(studentData);
+  console.log('Student créé:', student);
+
+  const saved = await this.studentsRepository.save(student);
+  console.log('Student sauvegardé:', saved);
   
-  console.log('Student entity:', student);
-  return this.studentsRepository.save(student);
+  return saved;
 }
 
   async findAll(): Promise<Student[]> {
