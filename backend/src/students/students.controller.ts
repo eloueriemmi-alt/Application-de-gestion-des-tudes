@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
@@ -8,10 +8,14 @@ export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-create(@Body() createStudentDto: CreateStudentDto) {
-  console.log('Raw body reçu:', createStudentDto);
-  return this.studentsService.create(createStudentDto);
-}
+  async create(@Body() createStudentDto: any) {
+    console.log('========== CONTROLLER CREATE ==========');
+    console.log('Raw body:', createStudentDto);
+    console.log('Body keys:', Object.keys(createStudentDto));
+    console.log('Body JSON:', JSON.stringify(createStudentDto));
+    
+    return this.studentsService.create(createStudentDto);
+  }
 
   @Get()
   findAll() {
@@ -24,12 +28,7 @@ create(@Body() createStudentDto: CreateStudentDto) {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body(new ValidationPipe({ 
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: false,
-  })) updateStudentDto: UpdateStudentDto) {
-    console.log('Données reçues pour update:', updateStudentDto);
+  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentsService.update(+id, updateStudentDto);
   }
 

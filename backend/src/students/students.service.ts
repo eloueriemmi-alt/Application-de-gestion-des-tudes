@@ -12,13 +12,13 @@ export class StudentsService {
     private studentsRepository: Repository<Student>,
   ) {}
 
- async create(createStudentDto: CreateStudentDto): Promise<Student> {
-  console.log('Service create() - DTO reçu:', createStudentDto);
+async create(createStudentDto: any): Promise<Student> {
+  console.log('===== SERVICE CREATE =====');
+  console.log('DTO:', createStudentDto);
   
-  const student = new Student();
-  Object.assign(student, {
-    nom: createStudentDto.nom,
-    prenom: createStudentDto.prenom,
+  const student = this.studentsRepository.create({
+    nom: createStudentDto.nom || '',
+    prenom: createStudentDto.prenom || '',
     email: createStudentDto.email || null,
     telephone: createStudentDto.telephone || null,
     dateNaissance: createStudentDto.dateNaissance || null,
@@ -30,9 +30,8 @@ export class StudentsService {
     telephoneParent: createStudentDto.telephoneParent || null,
     emailParent: createStudentDto.emailParent || null,
   });
-
-  console.log('Service create() - Student à sauvegarder:', student);
   
+  console.log('Student entity:', student);
   return this.studentsRepository.save(student);
 }
 
