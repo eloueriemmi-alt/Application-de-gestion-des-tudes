@@ -1,0 +1,24 @@
+[33m776e2f5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Add data validation and conversion in student creation
+[33m1dc230c[m Simplify backend to debug body parsing issue
+[33m411c481[m Use Object.assign to properly assign student properties
+[33me27bc7b[m Fix student entity to allow null values and improve create method
+[33mc8d40f6[m Remove ValidationPipe to debug student creation
+[33m43b1494[m Add proper HTTP headers to student service
+[33mf2d5850[m Fix student form with proper ReactiveFormsModule binding
+[33m3d2edfa[m Fix student form with ReactiveFormsModule and improve backend validation
+[33m7bcafd7[m Revert "Fix student form binding and service methods"
+[33medc7d40[m Fix student form binding and service methods
+[33m0f85fba[m Add JWT strategy for authentication
+[33me644356[m Remove email requirement for students
+[33m695f354[m Make student email optional and improve login page styling2
+[33m75e8159[m Make student email optional and improve login page styling
+[33mfb5de31[m Make student email optional and improve login page styling
+[33ma4aa30d[m Add JWT strategy for authentication
+[33mc558385[m Add SuperAdmin user management page
+[33m6b2e86e[m Fix CORS to allow Vercel frontend
+[33m58ebcbb[m Add registration page for new teachers
+[33m248deb3[m Fix Vercel configuration for Angular routing
+[33m7973511[m Increase budget limits for production build
+[33m6b2f834[m Configure frontend for production deployment
+[33m8c5b4ce[m Fix database connection for production
+[33mf128d31[m Initial commit - Application de gestion des études
